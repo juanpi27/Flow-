@@ -1,0 +1,32 @@
+/* Flow++ scanner */
+
+
+
+// UserCode
+%%
+// Options and declarations
+%class Lexer
+%unicode
+%line
+%column
+
+
+%%
+//Lexical rules
+
+"Start" 		{return KEYWORD;}
+"End" 			{return KEYWORD;}
+"Genesis"	 	{return KEYWORD;}
+"Fatality" 		{return KEYWORD;}
+"Insert" 		{return KEYWORD;}
+"Smash" 		{return KEYWORD;}
+"ShowItToMe" 	{return KEYWORD;}
+"GetOverHere" 	{return KEYWORD;}
+"="				{return ASSIGNMENT;}
+"'"				{return QUOTE;}
+"("				{return LPAREN;}
+")"				{return RPAREN;}
+","				{return COMMA;}
+[a-zA-Z0-9]+	{return VARIABLE;}
+[\ \t\b\f\r\n]+ { /* do nothing */ }
+
