@@ -1,7 +1,6 @@
 package gui;
 
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -10,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,21 +33,25 @@ import lexical.LexicalAnalyzer;
 
 public class FlowInterface {
 
-	private static JTextArea text= new JTextArea(); 
+	private JTextArea text= new JTextArea(); 
 	private static JTextArea outputText= new JTextArea(); 
 	private static JTextField inputFile=new JTextField();
-	//private static JTextField outputFile=new JTextField();
-	private static JButton compile=new JButton(); 
-	private static JButton run=new JButton();
-	private static String userCode=new String();
-	private static FlowDrawer flowchart=null;
-	private static JButton browse=new JButton(); 
-	private static JButton save=new JButton();
-	private static File codeFile=new File("inputFile.fpp");
-	private static LinkedList<FlowChart>flowcharts=new LinkedList<FlowChart>();
-	private static boolean saved=false;
+	private JTextField openFile=new JTextField();
+	private JButton compile; 
+	private JButton run;
+	private JButton open;
+	private JButton browse; 
+	private JButton save;
+	private File codeFile=new File("inputFile.fpp");
+	private FlowDrawer flowchart;
+	private LinkedList<FlowChart>flowcharts;
+	private boolean saved=false;
 	
 	public static void main(String[] args) {
+		new FlowInterface().launchGUI();
+	}
+	private void launchGUI()
+	{
 		//Main frame
 		JFrame frame= new JFrame("Flow++");
 		//Main Panel
@@ -65,7 +67,14 @@ public class FlowInterface {
 		JLabel conLabel=new JLabel("Console");
 
 		JLabel message1=new JLabel("Give file name. (Without .fpp)");
-		//JLabel message2=new JLabel("Give outfile name. (Without .fpp)");
+		JLabel message2=new JLabel("File to open:");
+		
+		compile=new JButton();
+		run=new JButton();
+		open=new JButton();
+		browse=new JButton();
+		save=new JButton();
+		
 		//Program exits when window is closed
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Size of window
@@ -80,8 +89,11 @@ public class FlowInterface {
 		
 		text.setEditable(true);
 		
-		//outputText.setEditable(false);
-		//outputText.setAlignmentX(Component.CENTER_ALIGNMENT);
+		outputText.setEditable(false);
+		outputText.setAlignmentX(Component.CENTER_ALIGNMENT);
+		outputText.setLineWrap(true);
+		outputText.setWrapStyleWord(true);
+		
 		
 		compile.setPreferredSize(new Dimension(100, 50));
 		compile.setText("Compile");
@@ -99,6 +111,9 @@ public class FlowInterface {
 		save.setText("Save");
 		save.setAlignmentX(Component.CENTER_ALIGNMENT);
 	
+		open.setPreferredSize(new Dimension(100, 50));
+		open.setText("Open");
+		open.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		//Will indicate if buttons were pressed
 		ActionListener listener=new FlowListener();
@@ -106,19 +121,20 @@ public class FlowInterface {
 		run.addActionListener(listener);
 		browse.addActionListener(listener);
 		save.addActionListener(listener);
+		open.addActionListener(listener);
 		
 		message1.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//message2.setAlignmentX(Component.CENTER_ALIGNMENT);
+		message2.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		inputFile.setEditable(true);
 		inputFile.setPreferredSize(new Dimension(190,30));
 		inputFile.setAlignmentX(Component.CENTER_ALIGNMENT);
 		inputFile.setText("inputfile");
 		
-//		outputFile.setEnabled(true);
-//		outputFile.setPreferredSize(new Dimension(190,30));
-//		outputFile.setAlignmentX(Component.CENTER_ALIGNMENT);
-//		outputFile.setText("outputfile");
+		openFile.setEnabled(true);
+		openFile.setPreferredSize(new Dimension(190,30));
+		openFile.setAlignmentX(Component.CENTER_ALIGNMENT);
+		openFile.setText("");
 		
 				
 			
@@ -133,6 +149,7 @@ public class FlowInterface {
 		 JScrollPane scrollbar1 = new JScrollPane(outputText);
 		//No horizontal scrollbar
 		scrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollbar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		//Places panel with scrollbar to the frame.
 		
 		scrollbar.setPreferredSize(new Dimension(750, 850));
@@ -159,10 +176,12 @@ public class FlowInterface {
 		sidePanel.add(message1);
 		sidePanel.add(Box.createVerticalStrut(2));
 		sidePanel.add(inputFile);
-		//sidePanel.add(Box.createVerticalStrut(5));
-		//sidePanel.add(message2);
-		//sidePanel.add(Box.createVerticalStrut(2));
-		//sidePanel.add(outputFile);
+		sidePanel.add(Box.createVerticalStrut(5));
+		sidePanel.add(message2);
+		sidePanel.add(Box.createVerticalStrut(2));
+		sidePanel.add(openFile);
+		sidePanel.add(Box.createVerticalStrut(5));
+		sidePanel.add(open);
 		sidePanel.add(Box.createVerticalStrut(300));
 		
 		
@@ -181,39 +200,38 @@ public class FlowInterface {
 	
 		frame.setVisible(true);
 		
-		
+				
 	}
-
 	
 	/**
 	 * 
 	 * @return code written by user
 	 */
-	private static String getText() {
+	private String getText() {
 		return text.getText();
 	}
-
-
-	/**
-	 * @param userCode the userCode to set
-	 */
-	private static void setUserCode(String code) {
-		userCode = code;
+	private void setText(String code) {
+		text.setText(code);
 	}
+
 
 	public static String getInputFile() {
 		return inputFile.getText();
 	}
-//	public static String getOutputFile() {
-//		return outputFile.getText();
-//	}
-	public static void writeToUser(String write)
-	{
-		outputText.setText(outputText.getText()+"\n"+write);
+	private String getOpenFile() {
+		return openFile.getText();
 	}
-	public static File getCode()
+	public static void writeToUser(String write, boolean error)
 	{
-		return codeFile;
+		if(error)
+		{
+			outputText.setForeground(Color.RED);
+		}
+		else
+		{
+			outputText.setForeground(Color.BLACK);
+		}
+		outputText.setText(outputText.getText()+write+"\n");
 	}
 
 	
@@ -222,7 +240,7 @@ public class FlowInterface {
 	 * Sets the positions in the frame of each state in the flowchart
 	 * @param LinkedList of FlowShapes
 	 */
-	private static void setFlowchartPositions(LinkedList<FlowShape>list) {
+	private void setFlowchartPositions(LinkedList<FlowShape>list) {
 		//First element in list is Start state
 		FlowShape current=list.get(0);
 		current.setPositionX(500);
@@ -233,7 +251,7 @@ public class FlowInterface {
 		list.getLast().setShape("circle");
 		flowchart=new FlowDrawer(list);
 	}
-	private static void	statePositioner(FlowShape first)
+	private void statePositioner(FlowShape first)
 	{
 		FlowShape current=first;
 		FlowShape next=current.getNext();
@@ -274,20 +292,22 @@ public class FlowInterface {
 		}
 	}
 
-	private static void codeDecoder(String filename) throws IOException
+	private void codeDecoder(String filename) throws IOException
 	{
-		//Stores all commands
-		//LinkedList<String> commands=new LinkedList<String>();
-		//Stores all variables
-		//LinkedList<String> variables=new LinkedList<String>();
-		
+		//Empty flowchart
 		FlowChart fc=null;
+		//Index of variables
 		int ind=0;
+		//Index of commands
 		int indc=0;
+		//If there is a variables
 		boolean var=false;
+		//If there is a command
 		boolean com=false;
+		//If it is genesis
 		boolean gen=false;
-		//boolean show=false;
+		
+		//Read file with all the possible commands
 		FileReader fr=new FileReader("src/resources/CommandList.txt");
 		BufferedReader read=new BufferedReader(fr);
 		String temp=read.readLine();
@@ -297,58 +317,59 @@ public class FlowInterface {
 			allCommands.add(temp);
 			temp=read.readLine();
 		}
+		//Read file with lexical analysis
 		fr=new FileReader(filename);
 		read=new BufferedReader(fr);
 		temp=read.readLine();
-		
+		//Read every line in lexical analysis
 		while(temp!=null)
 		{
+			//If variable save as a variable of the flowchart
 			if(temp.contains("-Var")&&!com)
 			{
 				fc.addVariable(temp.substring(temp.indexOf(" "),temp.indexOf("-")).trim());
-				//variables.add(temp.substring(temp.indexOf(" "),temp.indexOf("-")).trim());
 				ind++;
 				var=true;
 			}
+			//If string that save in the flowchart with the appropriate variable
 			else if(var&&temp.contains("-String"))
 			{
 				fc.getVariables().set(ind-1, fc.getVariables().get(ind-1)+"="+(temp.substring(temp.indexOf(" "),temp.indexOf("-")-1).trim()));
-				//variables.set(ind-1, variables.get(ind-1)+"="+(temp.substring(temp.indexOf(" "),temp.indexOf("-")-1).trim()));
 				var=false;
 			}
+			//If command save as command in flowchart
 			else if(allCommands.contains(temp.substring(temp.indexOf("-")+1, temp.length())))
 			{
+				//If genesis start new flowchart
 				if(temp.substring(temp.indexOf("-")+1, temp.length()).trim().equals("Genesis"))
 				{
 					if(fc==null){
 						fc=new FlowChart();
 					}
+					//If not the first flowchart then save previous and start a new one
 					else
 					{
+						//Save positions of states
 						fc.setStates(flowSorter(fc.getVariables(), fc.getCommands()));
+						//Save flowchart
 						flowcharts.add(fc);
-						
+						//New flowchart
 						fc=new FlowChart();
 						ind=0;
 						indc=0;
 					}
 					gen=true;
 				}
-//				if(temp.substring(temp.indexOf("-")+1, temp.length()).trim().equals("ShowItToMe"))
-//				{
-//					show=true;
-//				}
 				fc.addCommand(temp.substring(temp.indexOf("-")+1, temp.length()).trim());
-				//commands.add(temp.substring(temp.indexOf("-")+1, temp.length()).trim());
 				indc++;
 				com=true;
 			}
+			//If command was found get its parameters
 			else if(com)
 			{
 				if(temp.contains("LeftParen"))
 				{
 					fc.getCommands().set(indc-1, fc.getCommands().get(indc-1)+"(");
-					//commands.set(indc-1, commands.get(indc-1)+"(");
 				}
 				else if(temp.contains("Var"))
 				{
@@ -358,30 +379,23 @@ public class FlowInterface {
 						gen=false;
 					}
 					fc.getCommands().set(indc-1, fc.getCommands().get(indc-1)+varMatch(temp.substring(temp.indexOf(" "),temp.indexOf("-")).trim(), fc.getVariables()));
-					//commands.set(indc-1, commands.get(indc-1)+varMatch(temp.substring(temp.indexOf(" "),temp.indexOf("-")).trim(), variables));
 				}
 				else if(temp.contains("RightParen"))
 				{
 					fc.getCommands().set(indc-1, fc.getCommands().get(indc-1)+")");
-					//commands.set(indc-1, commands.get(indc-1)+")");
 					com=false;
 				}
 				else
 				{
 					fc.getCommands().set(indc-1, fc.getCommands().get(indc-1)+",");
-					//commands.set(indc-1, commands.get(indc-1)+",");
 				}
 			}
 			temp=read.readLine();
 		}
+		//Set the order of the states
 		fc.setStates(flowSorter(fc.getVariables(), fc.getCommands()));
+		//Save flowchart
 		flowcharts.add(fc);
-		
-//		if(show)
-//		{
-//			return flowSorter(fc.getVariables(), fc.getCommands());
-//		}
-		//return null;
 		
 	}
 	/**
@@ -390,7 +404,7 @@ public class FlowInterface {
 	 * @param Array of variables with their values
 	 * @return String with the value of the given variable
 	 */
-	private static String varMatch(String var, LinkedList<String> vars)
+	private String varMatch(String var, LinkedList<String> vars)
 	{
 		//If the variable received are Start and End then they a special constants.
 		if(var.contains("Start"))
@@ -418,7 +432,7 @@ public class FlowInterface {
 	 * @param ArrayList of the commands
 	 * @return LinkedList of FlowShapes that have all the next and previous states organized.
 	 */
-	private static LinkedList<FlowShape> flowSorter(LinkedList<String> var,LinkedList<String>com)
+	private LinkedList<FlowShape> flowSorter(LinkedList<String> var,LinkedList<String>com)
 	{
 		
 		LinkedList<FlowShape>varList=new LinkedList<FlowShape>();
@@ -586,12 +600,12 @@ public class FlowInterface {
 		
 		return varList;
 	}
-	private static void saveFile()
+	private void saveFileWarn()
 	{
 		JFrame frame=new JFrame();
 		JPanel mainPanel=new JPanel();
-		JTextArea warning =new JTextArea("Remember to change your the file name from the default ones!");
-		frame.setSize(300, 200);
+		JTextArea warning =new JTextArea("\n     Remember to change your the file name from the default ones!");
+		frame.setSize(650, 150);
 		frame.setLocation(300, 400);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setTitle("Warning!");
@@ -607,15 +621,48 @@ public class FlowInterface {
 		
 		frame.setVisible(true);
 		
+	}
+	private void openFileWarn()
+	{
+		JFrame frame=new JFrame();
+		JPanel mainPanel=new JPanel();
+		JTextArea warning =new JTextArea("\n\t\tError: File not found.\n     Check if name is correct and remember that files end with .fpp");
+		frame.setSize(650, 150);
+		frame.setLocation(300, 400);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setTitle("Warning!");
+		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.Y_AXIS));
+		warning.setEditable(false);
+		warning.setWrapStyleWord(true);
+		warning.setLineWrap(true);
+		warning.setFont(new Font("Sans Serif", Font.PLAIN, 20));
+		warning.setBackground(new Color(239,239,239));
+		warning.setSize(300, 195);
+		mainPanel.add(warning);
+		frame.add(mainPanel);
 		
+		frame.setVisible(true);
 		
+	}
+	private String openFile(String filename) throws IOException
+	{
+		FileReader fr=new FileReader(filename);
+		BufferedReader read=new BufferedReader(fr);
+		String temp=read.readLine();
+		String code="";
+		while(temp!=null)
+		{
+			code=code+temp+"\n";
+			temp=read.readLine();
+		}
+		return code;
 	}
 	/**
 	 * Class the listens for input in the GUI. More specifically from the buttons.
 	 * @author Gretchen
 	 *
 	 */
-	private static class FlowListener implements ActionListener{
+	private class FlowListener implements ActionListener{
 
 		
 		public void actionPerformed(ActionEvent e) {
@@ -625,11 +672,12 @@ public class FlowInterface {
 			//If button pressed is compile then obtain what the user wrote and check for errors
 			if(theButton==compile)
 			{
-				setUserCode(getText());
+				
 			}
 			//If button pressed is run, compile code and execute it.
 			else if(theButton==run)
 			{
+				flowcharts=new LinkedList<FlowChart>();
 				if(saved)
 				{
 					try {
@@ -640,6 +688,7 @@ public class FlowInterface {
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						writeToUser("Error: IO Exception", true);
 					}
 					
 					lex.start();
@@ -661,26 +710,25 @@ public class FlowInterface {
 							}
 						}
 						
-//						if(temp!=null){
-//							setFlowchartPositions(temp);
-//							flowchart.showItToMe(1000, 0);
-//						}
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						writeToUser("Error: File not found", true);
 					}
-					
-					
 					
 				}
 				else
 				{
-					saveFile();
+					saveFileWarn();
 					
 				}
 			}
 			else if(theButton==save)
 			{
+				if(inputFile.getText().equals("")||inputFile.getText().equals(" "))
+				{
+					writeToUser("Error: No name for save file", true);
+				}
 				codeFile=new File(inputFile.getText()+".fpp");
 				saved=true;
 			}
@@ -688,6 +736,19 @@ public class FlowInterface {
 			else if(theButton==browse)
 			{
 				lex.start2();
+			}
+			else if(theButton==open)
+			{
+				try {
+					setText(openFile(getOpenFile()));
+					inputFile.setText(getOpenFile().replace(".fpp", ""));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					writeToUser("Error: Could not open file", true);
+					openFileWarn();
+					
+				}
 			}
 			
 			

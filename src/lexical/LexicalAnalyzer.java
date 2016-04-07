@@ -30,7 +30,7 @@ public class LexicalAnalyzer {
         Output ou = new Output(filename+"_lexAnalisys");
         ou.fileWritter(lex.LexicalAnalyzer());
         //System.out.print("Ending... ");
-        FlowInterface.writeToUser("Ending...");
+        FlowInterface.writeToUser("Ending...", false);
     }
     
     public void start2(){
@@ -39,7 +39,7 @@ public class LexicalAnalyzer {
         Reading rf = new Reading(new File("test.fpp")); 
         new Output("output").fileWritter(new Lexical(rf.readFile()).LexicalAnalyzer());
         //System.out.print("Ending... ");
-        FlowInterface.writeToUser("Ending...");
+        FlowInterface.writeToUser("Ending...", false);
     }
     
 }

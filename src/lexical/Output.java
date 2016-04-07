@@ -6,6 +6,8 @@ package lexical;
  */
 
 
+import gui.FlowInterface;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -54,6 +56,7 @@ public class Output {
         catch (Exception e)
         {
             System.err.println ("Error writing to file");
+            FlowInterface.writeToUser("Error writing to file", true);
         }
 
     } 
@@ -80,6 +83,7 @@ public class Output {
         catch (Exception e)
         {
             System.err.println ("Error writing to file");
+            FlowInterface.writeToUser("Error writing to file", true);
         }
 
     } 

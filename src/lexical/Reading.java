@@ -6,6 +6,8 @@ package lexical;
  */
 
 
+import gui.FlowInterface;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -56,10 +58,12 @@ public class Reading {
     } 
      catch (FileNotFoundException e) {
       System.out.println("File not Found");
+      FlowInterface.writeToUser("File not found", true);
       return null;
     }
     catch (IOException e) {
       System.out.println("IOException");
+      FlowInterface.writeToUser("IO Exception", true);
     }
       return resumen;
     }
