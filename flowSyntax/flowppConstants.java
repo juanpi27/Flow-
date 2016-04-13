@@ -25,7 +25,7 @@ public interface flowppConstants {
   /** RegularExpression Id. */
   int Var = 12;
   /** RegularExpression Id. */
-  int CharValue = 13;
+  int String = 13;
   /** RegularExpression Id. */
   int Number = 14;
   /** RegularExpression Id. */
@@ -40,6 +40,8 @@ public interface flowppConstants {
   int Quote = 19;
   /** RegularExpression Id. */
   int Assign = 20;
+  /** RegularExpression Id. */
+  int CharValue = 21;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -59,7 +61,7 @@ public interface flowppConstants {
     "\"ShowItToMe\"",
     "\"GetOverHere\"",
     "\"Var\"",
-    "\"CharValue\"",
+    "\"String\"",
     "\"Number\"",
     "\"Backslash\"",
     "\"LeftParen\"",
@@ -67,6 +69,7 @@ public interface flowppConstants {
     "\"Comma\"",
     "\"Quote\"",
     "\"Assign\"",
+    "\"CharValue\"",
   };
 
 }

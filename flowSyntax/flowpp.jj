@@ -32,7 +32,7 @@ TOKEN:
 |	<ShowItToMe : "ShowItToMe">
 |	<GetOverHere : "GetOverHere">
 |	<Var : "Var">
-|	<CharValue : "CharValue">
+|	<String : "String">
 |	<Number : "Number">
 |	<Backslash : "Backslash">
 |	<LeftParen : "LeftParen">
@@ -40,6 +40,7 @@ TOKEN:
 |	<Comma : "Comma">
 |	<Quote : "Quote">
 |	<Assign : "Assign">
+|	<CharValue : "CharValue">
 
 }
 
@@ -56,7 +57,7 @@ void statements():
 void assign():
 {}
 {
-	<Var> <Assign> <CharValue>
+	<Var> <Assign> <Quote> <String> <Quote>
 }
 void command():
 {}
@@ -64,7 +65,7 @@ void command():
 	<Insert> <LeftParen> <Var> <Comma> <Var> <RightParen>
 |	<InsertIf> <LeftParen> <Var> <Comma> <Var> <Comma> <Var> <Comma> <Var> <RightParen>
 |	<Smash> <LeftParen> <Var> <RightParen>
-|	<ShowItToMe> <LeftParen> <CharValue> <RightParen>
+|	<ShowItToMe> <LeftParen> <Var> <RightParen>
 |	<GetOverHere> <LeftParen> <Var> <Comma> <Var> <RightParen>
 }
 
