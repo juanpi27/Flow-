@@ -1,0 +1,6 @@
+Genesis
+Fatality
+Insert
+InsertIf
+Smash
+ShowItToMe
