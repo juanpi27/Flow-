@@ -48,7 +48,7 @@ TOKEN:
 void start():
 {}
 {
-	<Genesis> <LeftParen> <Var> <RightParen> <Newline> (statements())* <EOF>
+	(<Genesis> <LeftParen> <Var> <RightParen> <Newline> (statements())*)* <EOF>
 }
 void statements():
 {}
