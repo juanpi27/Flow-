@@ -95,7 +95,7 @@
     case ShowItToMe:
       jj_consume_token(ShowItToMe);
       jj_consume_token(LeftParen);
-      jj_consume_token(CharValue);
+      jj_consume_token(Var);
       jj_consume_token(RightParen);
       break;
     case GetOverHere:

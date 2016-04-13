@@ -64,7 +64,7 @@ void command():
 	<Insert> <LeftParen> <Var> <Comma> <Var> <RightParen>
 |	<InsertIf> <LeftParen> <Var> <Comma> <Var> <Comma> <Var> <Comma> <Var> <RightParen>
 |	<Smash> <LeftParen> <Var> <RightParen>
-|	<ShowItToMe> <LeftParen> <CharValue> <RightParen>
+|	<ShowItToMe> <LeftParen> <Var> <RightParen>
 |	<GetOverHere> <LeftParen> <Var> <Comma> <Var> <RightParen>
 }
 
