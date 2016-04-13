@@ -1,1 +1,1 @@
-Genesis LeftParen Var RightParen Var Assign CharValue Fatality LeftParen Var RightParen
+Genesis LeftParen Var RightParen Newline Var Assign Quote String Quote Newline Fatality LeftParen Var RightParen

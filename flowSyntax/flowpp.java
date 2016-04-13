@@ -15,6 +15,7 @@
     jj_consume_token(LeftParen);
     jj_consume_token(Var);
     jj_consume_token(RightParen);
+    jj_consume_token(Newline);
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -43,6 +44,7 @@
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case Var:
       assign();
+      jj_consume_token(Newline);
       break;
     case Insert:
     case InsertIf:
@@ -50,6 +52,7 @@
     case ShowItToMe:
     case GetOverHere:
       command();
+      jj_consume_token(Newline);
       break;
     default:
       jj_la1[1] = jj_gen;
@@ -247,7 +250,7 @@
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[22];
+    boolean[] la1tokens = new boolean[23];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -261,7 +264,7 @@
         }
       }
     }
-    for (int i = 0; i < 22; i++) {
+    for (int i = 0; i < 23; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
