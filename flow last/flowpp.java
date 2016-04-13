@@ -19,6 +19,7 @@
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case Fatality:
       case Insert:
       case InsertIf:
       case Smash:
@@ -33,10 +34,6 @@
       }
       statements();
     }
-    jj_consume_token(Fatality);
-    jj_consume_token(LeftParen);
-    jj_consume_token(Var);
-    jj_consume_token(RightParen);
     jj_consume_token(0);
   }
 
@@ -46,6 +43,7 @@
       assign();
       jj_consume_token(Newline);
       break;
+    case Fatality:
     case Insert:
     case InsertIf:
     case Smash:
@@ -74,6 +72,8 @@
     case Insert:
       jj_consume_token(Insert);
       jj_consume_token(LeftParen);
+      jj_consume_token(Var);
+      jj_consume_token(Comma);
       jj_consume_token(Var);
       jj_consume_token(Comma);
       jj_consume_token(Var);
@@ -111,6 +111,12 @@
       jj_consume_token(Var);
       jj_consume_token(RightParen);
       break;
+    case Fatality:
+      jj_consume_token(Fatality);
+      jj_consume_token(LeftParen);
+      jj_consume_token(Var);
+      jj_consume_token(RightParen);
+      break;
     default:
       jj_la1[2] = jj_gen;
       jj_consume_token(-1);
@@ -133,7 +139,7 @@
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1f80,0x1f80,0xf80,};
+      jj_la1_0 = new int[] {0x1fc0,0x1fc0,0xfc0,};
    }
 
   /** Constructor with InputStream. */
