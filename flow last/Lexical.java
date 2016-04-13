@@ -170,8 +170,8 @@ public class Lexical {
             else{
                 tokensDef.add("unknown");
                 tokensIden.add(tokens.get(i));
-                //ErrorLine =  "Token: "+tokens.get(i)+" Number: "+i;
-                //return "Error";
+                ErrorLine =  "Token: "+tokens.get(i)+" Number: "+ (i+1);
+                return "Error";
             }
         } 
         
