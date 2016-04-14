@@ -12,31 +12,40 @@ package syntax;
                         }
 
   final public void start() throws ParseException {
-    jj_consume_token(Genesis);
-    jj_consume_token(LeftParen);
-    jj_consume_token(Var);
-    jj_consume_token(RightParen);
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case Insert:
-      case InsertIf:
-      case Smash:
-      case ShowItToMe:
-      case GetOverHere:
-      case Var:
+      case Genesis:
         ;
         break;
       default:
         jj_la1[0] = jj_gen;
         break label_1;
       }
-      statements();
+      jj_consume_token(Genesis);
+      jj_consume_token(LeftParen);
+      jj_consume_token(Var);
+      jj_consume_token(RightParen);
+      jj_consume_token(Newline);
+      label_2:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case Fatality:
+        case Insert:
+        case InsertIf:
+        case Smash:
+        case ShowItToMe:
+        case GetOverHere:
+        case Var:
+          ;
+          break;
+        default:
+          jj_la1[1] = jj_gen;
+          break label_2;
+        }
+        statements();
+      }
     }
-    jj_consume_token(Fatality);
-    jj_consume_token(LeftParen);
-    jj_consume_token(Var);
-    jj_consume_token(RightParen);
     jj_consume_token(0);
   }
 
@@ -44,16 +53,19 @@ package syntax;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case Var:
       assign();
+      jj_consume_token(Newline);
       break;
+    case Fatality:
     case Insert:
     case InsertIf:
     case Smash:
     case ShowItToMe:
     case GetOverHere:
       command();
+      jj_consume_token(Newline);
       break;
     default:
-      jj_la1[1] = jj_gen;
+      jj_la1[2] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -72,6 +84,8 @@ package syntax;
     case Insert:
       jj_consume_token(Insert);
       jj_consume_token(LeftParen);
+      jj_consume_token(Var);
+      jj_consume_token(Comma);
       jj_consume_token(Var);
       jj_consume_token(Comma);
       jj_consume_token(Var);
@@ -109,8 +123,14 @@ package syntax;
       jj_consume_token(Var);
       jj_consume_token(RightParen);
       break;
+    case Fatality:
+      jj_consume_token(Fatality);
+      jj_consume_token(LeftParen);
+      jj_consume_token(Var);
+      jj_consume_token(RightParen);
+      break;
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[3] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -125,13 +145,13 @@ package syntax;
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[3];
+  final private int[] jj_la1 = new int[4];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1f80,0x1f80,0xf80,};
+      jj_la1_0 = new int[] {0x20,0x1fc0,0x1fc0,0xfc0,};
    }
 
   /** Constructor with InputStream. */
@@ -145,7 +165,7 @@ package syntax;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -159,7 +179,7 @@ package syntax;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -169,7 +189,7 @@ package syntax;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -179,7 +199,7 @@ package syntax;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -188,7 +208,7 @@ package syntax;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -197,7 +217,7 @@ package syntax;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -248,12 +268,12 @@ package syntax;
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[22];
+    boolean[] la1tokens = new boolean[23];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -262,7 +282,7 @@ package syntax;
         }
       }
     }
-    for (int i = 0; i < 22; i++) {
+    for (int i = 0; i < 23; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

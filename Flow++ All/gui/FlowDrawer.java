@@ -19,8 +19,6 @@ public class FlowDrawer {
 
 	private LinkedList<FlowShape> listOfCommands;
 
-	
-	
 	public FlowDrawer(LinkedList<FlowShape>a1)
 	{
 		
@@ -47,22 +45,19 @@ public class FlowDrawer {
 		flowFrame.add(scrollbar);
 	
 	}
-		
-	
 		/**
 		 * Displays flowchart in window
 		 * @param xLocation- x position for top right corner of window
 		 * @param yLocation- y position for top right corner of window
 		 */
-	public void showItToMe(int xLocation, int yLocation){
+	public void showItToMe(int xLocation, int yLocation)
+	{
 		
 		flowFrame.setLocation(xLocation, yLocation);
 		flowFrame.setVisible(true);
 		
 	}
-
-	
-	class FlowPanel extends JPanel
+	private class FlowPanel extends JPanel
 	{
 		
 		public void paintComponent(Graphics g) {
@@ -71,34 +66,32 @@ public class FlowDrawer {
 			//Draw the corresponding shape for each FlowShape
 			for(FlowShape thing:listOfCommands)
 			{
-				if(thing.getShape().equalsIgnoreCase("diam")){
-					flowDiamond(g,thing.getName(),thing.getPositionX(),thing.getPositionY(),thing.getNext2());
-				}
-				else if(thing.getShape().equalsIgnoreCase("diam-arrow-yes")){
-					flowDiamondYesS(g,thing.getName(),thing.getPositionX(),thing.getPositionY(),thing.getNext());
-				}
-				else if(thing.getShape().equalsIgnoreCase("diam-arrow-no")){
-					flowDiamondNoS(g,thing.getName(),thing.getPositionX(),thing.getPositionY(),thing.getNext2());
-				}
-				else if(thing.getShape().equalsIgnoreCase("diam-arrow-yes-no")){
-					flowDiamond(g,thing.getName(),thing.getPositionX(),thing.getPositionY(),thing.getNext(),thing.getNext2());
-				}
-				else if(thing.getShape().equalsIgnoreCase("rect-arrow")){
-					flowRectangle(g,thing.getName(),thing.getPositionX(),thing.getPositionY(),thing.getNext());
-				}
-				else if(thing.getShape().equalsIgnoreCase("rect")){
-					flowRectangle(g,thing.getName(),thing.getPositionX(),thing.getPositionY());
-				}
-				else if(thing.getShape().equalsIgnoreCase("circle"))
+				if(thing.getPositionX()!=0)
 				{
-					circle(g,thing.getName(),thing.getPositionX(),thing.getPositionY());
+			
+			
+					if(thing.getShape().equalsIgnoreCase("diam"))
+					{
+						flowDiamond(g,thing.getName(),thing.getPositionX(),thing.getPositionY(),thing.getNext(),thing.getNext2());
+					}
+					else if(thing.getShape().equalsIgnoreCase("rect"))
+					{
+						flowRectangle(g,thing.getName(),thing.getPositionX(),thing.getPositionY(), thing.getNext());
+					}
+					else if(thing.getShape().equalsIgnoreCase("circle"))
+					{
+						circle(g,thing.getName(),thing.getPositionX(),thing.getPositionY(), thing.getNext());
+					}
+				}
+				else
+				{
+					FlowInterface.writeToUser("Error: Some components were not well positioned. Nothing is pointing to "+thing.getName(), true);
 				}
 			}
-			
 		}
 		
 		//Creates a circle
-		private void circle(Graphics g, String name, int x, int y)
+		private void circle(Graphics g, String name, int x, int y, FlowShape next)
 		{
 			g.setColor(new Color(164, 221, 237));
 			g.fillOval(x-50,y, 100, 100);
@@ -107,149 +100,173 @@ public class FlowDrawer {
 			g.drawString(name, x-30,y+50);
 			if(!name.equalsIgnoreCase("end"))
 			{
-				arrow(g,x,y+100);
+				arrow(g,x,y+100, next);
 			}
-	
-		
 		}
 		//Creates rectangle 
-		private void flowRectangle(Graphics g, String name, int x, int y)
+		private void flowRectangle(Graphics g, String name, int x, int y, FlowShape next)
 		{
 			g.setColor(new Color(164, 221, 237));
 			g.fillRect(x-100, y, 200, 100);
 			g.setFont(new Font("Arial", Font.PLAIN, 25));
 			g.setColor(Color.black);
 			g.drawString(name, x-20,y+50);
-			arrow(g,x,y+100);
-		}
-		//Creates rectangle for loop
-		private void flowRectangle(Graphics g, String name, int x, int y,FlowShape next)
-		{
-			g.setColor(new Color(164, 221, 237));
-			g.fillRect(x-100, y, 200, 100);
-			g.setFont(new Font("Arial", Font.PLAIN, 25));
-			g.setColor(Color.black);
-			g.drawString(name, x-20,y+50);
-			specialArrow(g,x,y+100,next);
+			arrow(g,x,y+100, next);
 		}
 		//Creates diamond for if
-		private void flowDiamond(Graphics g, String name, int x, int y, FlowShape next)
+		private void flowDiamond(Graphics g, String name, int x, int y, FlowShape next, FlowShape next2)
 		{
 			int x1[]= {x,x+100,x,x-100};
 			int y1[] = {y,y+100,y+200,y+100};
 			g.setColor(new Color(164, 221, 237));
 			g.fillPolygon(x1, y1, 4);
-
 			g.setFont(new Font("Arial", Font.PLAIN, 25));
 			g.setColor(Color.black);
 			g.drawString(name, x-20,y+100);
-			
-			ifArrow(g,x,y+200, next);
+			ifArrow(g,x,y+200, next, next2);
 		}
 		
-		//Creates diamond for if for loop
-		private void flowDiamondYesS(Graphics g, String name, int x, int y,FlowShape next)
-		{
-			int x1[]= {x,x+100,x,x-100};
-			int y1[] = {y,y+100,y+200,y+100};
-			g.setColor(new Color(164, 221, 237));
-			g.fillPolygon(x1, y1, 4);
-
-			g.setFont(new Font("Arial", Font.PLAIN, 25));
-			g.setColor(Color.black);
-			g.drawString(name, x-20,y+100);
-			
-			specialIfArrow(g,x,y+200,next);
-		}
-		private void flowDiamondNoS(Graphics g, String name, int x, int y,FlowShape next)
-		{
-			int x1[]= {x,x+100,x,x-100};
-			int y1[] = {y,y+100,y+200,y+100};
-			g.setColor(new Color(164, 221, 237));
-			g.fillPolygon(x1, y1, 4);
-
-			g.setFont(new Font("Arial", Font.PLAIN, 25));
-			g.setColor(Color.black);
-			g.drawString(name, x-20,y+100);
-			
-			arrow(g,x,y+200);
-			specialIfNoArrow(g,x,y+200,next);
-		}
-		//Creates diamond for if for loop
-		private void flowDiamond(Graphics g, String name, int x, int y,FlowShape next,FlowShape next2)
-		{
-			int x1[]= {x,x+100,x,x-100};
-			int y1[] = {y,y+100,y+200,y+100};
-			g.setColor(new Color(164, 221, 237));
-			g.fillPolygon(x1, y1, 4);
-
-			g.setFont(new Font("Arial", Font.PLAIN, 25));
-			g.setColor(Color.black);
-			g.drawString(name, x-20,y+100);
-			
-			specialIfNoArrow(g, x, y+200, next2);
-			specialIfArrow(g,x,y+200,next);
-		
-		}
-		//Creates an arrow
-		private void arrow(Graphics g, int x, int y)
-		{
-			
-			g.drawLine(x,y, x,y+100);
-			g.drawLine(x,y+100, x-10,y+90);
-			g.drawLine(x,y+100, x+10,y+90);
-			
-
-		}
-		//Creates arrow for case of an if
-		private void ifArrow(Graphics g, int x, int y, FlowShape next)
-		{
-			int nextp=next.getPositionX();
-			arrow(g,x,y);
-			g.setFont(new Font("Arial", Font.PLAIN, 20));
-			g.drawString("yes", x-30,y+50);
-			g.drawLine(x+100,y-100, nextp,y-100);
-			g.drawLine(nextp,y-100, nextp,y+100);
-			g.drawLine(nextp,y+100, nextp-10,y+90);
-			g.drawLine(nextp,y+100, nextp+10,y+90);
-			g.drawString("no", nextp-20,y+50);
-
-		}
-		private void specialArrow(Graphics g, int x, int y,FlowShape next)
-		{
-			
-			g.drawLine(x,y, x,y+50);
-			g.drawLine(x, y+50, next.getPositionX()-200, y+50);
-			arrow(g,x,y,next);
-
-		}
-		private void specialIfNoArrow(Graphics g, int x, int y,FlowShape next )
-		{
-			g.drawLine(x+100,y-100, x+210,y-100);
-			g.drawLine(x+210,y-100, x+210,y+50);
-			g.drawLine(x+210,y+50, next.getPositionX()-200,y+50);
-			arrow(g,x,y,next);
-			g.setFont(new Font("Arial", Font.PLAIN, 20));
-			g.drawString("no", x+180,y+25);
-		}
-		//Creates arrow for case of an if
-		private void specialIfArrow(Graphics g, int x, int y,FlowShape next )
-		{
-			
-			specialArrow(g,x,y,next);
-			g.setFont(new Font("Arial", Font.PLAIN, 20));
-			g.drawString("yes", x-30,y+50);
-			
-
-		}
 		private void arrow(Graphics g, int x, int y,FlowShape next )
 		{
-			g.drawLine(next.getPositionX()-200,y+50, next.getPositionX()-200,next.getPositionY()-50);
-			g.drawLine(next.getPositionX()-200, next.getPositionY()-50, next.getPositionX(), next.getPositionY()-50);
-			g.drawLine(next.getPositionX(),next.getPositionY()-50,next.getPositionX()-10,next.getPositionY()-40);
-			g.drawLine(next.getPositionX(),next.getPositionY()-50,next.getPositionX()-10,next.getPositionY()-60);
-		}
+			g.drawLine(x, y, x, y+50);
+			if(x==next.getPositionX())
+			{
 				
+				if(y<next.getPositionY())
+				{
+					g.drawLine(x, y+50, x, next.getPositionY());
+					g.drawLine(x, next.getPositionY(), x-10, next.getPositionY()-10);
+					g.drawLine(x, next.getPositionY(), x+10, next.getPositionY()-10);
+					next.setPointed(true);
+				}
+				else
+				{
+					finishArrow(g,x,y,next,false,next.isPointed());
+				}
+			}
+			else if(next.getPositionX()<x)
+			{
+				
+				finishArrow(g,x,y,next,true,next.isPointed());
+			}
+			else
+			{
+				finishArrow(g,x,y,next,false,next.isPointed());
+			}
+		}
+		private void arrowIf(Graphics g, int x, int y,FlowShape next )
+		{
+			g.drawLine(x, y, x, y+25);
+			if(x==next.getPositionX())
+			{
+				
+				if(y<next.getPositionY())
+				{
+					g.drawLine(x, y+25, x, next.getPositionY());
+					g.drawLine(x, next.getPositionY(), x-10, next.getPositionY()-10);
+					g.drawLine(x, next.getPositionY(), x+10, next.getPositionY()-10);
+					next.setPointed(true);
+				}
+				else
+				{
+					finishArrow2(g,x,y,next, false,next.isPointed());
+				}
+			}
+			else if(next.getPositionX()<x)
+			{
+				
+				finishArrow2(g,x,y,next, true, next.isPointed());
+			}
+			else
+			{
+				finishArrow2(g,x,y,next,false, next.isPointed());
+			}
+		}
+		private void ifArrow(Graphics g, int x, int y, FlowShape next, FlowShape next2)
+		{
+			arrowIf(g,x,y, next);
+			g.setFont(new Font("Arial", Font.PLAIN, 20));
+			g.drawString("yes", x-30,y+50);
+						
+			if(next2.getPositionX()<=x)
+			{
+				g.drawLine(x+100,y-100, x+150,y-100);
+				g.drawLine(x+150,y-100, x+150,next2.getPositionY()-25);
+				g.drawLine(x+150,next2.getPositionY()-25, next2.getPositionX(),next2.getPositionY()-25);
+				g.drawLine(next2.getPositionX(),next2.getPositionY()-25, next2.getPositionX()+10,next2.getPositionY()-15);
+				g.drawLine(next2.getPositionX(),next2.getPositionY()-25, next2.getPositionX()+10,next2.getPositionY()-35);
+			}
+			else
+			{
+				g.drawLine(x+100,y-100, next2.getPositionX(),y-100);
+				g.drawLine(next2.getPositionX(),y-100, next2.getPositionX(),next2.getPositionY());
+				g.drawLine(next2.getPositionX(),next2.getPositionY(), next2.getPositionX()-10,next2.getPositionY()-10);
+				g.drawLine(next2.getPositionX(),next2.getPositionY(), next2.getPositionX()+10,next2.getPositionY()-10);		
+				next2.setPointed(true);
+			}
+			g.drawString("no", x+160,y-85);
+
+		}
+		private void finishArrow(Graphics g, int x, int y, FlowShape next, boolean small, boolean pointed)
+		{
+			int dis=-110;
+			int dis2=-10;
+			int dis3=-60;
+			int dis4=-40;
+			if(small)
+			{
+				dis=110;
+				dis2=10;
+				dis3=60;
+				dis4=40;
+			}
+			g.drawLine(x, y+50, next.getPositionX()+dis, y+50);
+			g.drawLine(next.getPositionX()+dis, y+50, next.getPositionX()+dis, next.getPositionY()-50);
+			g.drawLine(next.getPositionX()+dis, next.getPositionY()-50, next.getPositionX(), next.getPositionY()-50);
+			if(!pointed)
+			{
+				g.drawLine(next.getPositionX(), next.getPositionY()-50, next.getPositionX(), next.getPositionY());
+				g.drawLine(next.getPositionX(), next.getPositionY(), next.getPositionX()+10, next.getPositionY()-10);
+				g.drawLine(next.getPositionX(), next.getPositionY(), next.getPositionX()-10, next.getPositionY()-10);
+				next.setPointed(true);
+			}
+			else
+			{
+				g.drawLine(next.getPositionX(), next.getPositionY()-50, next.getPositionX()+dis2, next.getPositionY()-dis4);
+				g.drawLine(next.getPositionX(), next.getPositionY()-50, next.getPositionX()+dis2, next.getPositionY()-dis3);
+			}
+			
+			
+			
+			
+		}
+		private void finishArrow2(Graphics g, int x, int y, FlowShape next, boolean small, boolean pointed)
+		{
+			int dis=-110;
+			int dis2=-10;
+			if(small)
+			{
+				dis=110;
+				dis2=10;
+			}
+			g.drawLine(x, y+25, next.getPositionX()+dis, y+25);
+			g.drawLine(next.getPositionX()+dis, y+25, next.getPositionX()+dis, next.getPositionY()-25);
+			g.drawLine(next.getPositionX()+dis, next.getPositionY()-25, next.getPositionX(), next.getPositionY()-25);
+			if(!pointed)
+			{
+				g.drawLine(next.getPositionX(), next.getPositionY()-25, next.getPositionX(), next.getPositionY());
+				g.drawLine(next.getPositionX(), next.getPositionY()-25, next.getPositionX()+10, next.getPositionY()-35);
+				g.drawLine(next.getPositionX(), next.getPositionY()-25, next.getPositionX()-10, next.getPositionY()-35);
+				next.setPointed(true);
+			}
+			else
+			{
+				g.drawLine(next.getPositionX(), next.getPositionY()-25, next.getPositionX()+dis2, next.getPositionY()-35);
+				g.drawLine(next.getPositionX(), next.getPositionY()-25, next.getPositionX()+dis2, next.getPositionY()-15);
+			}
+			
+		}
+		
 	}
 
 }

@@ -54,7 +54,7 @@ public class FlowChart {
 		{
 			varList.add(new FlowShape((g.substring(g.indexOf("=")+1, g.length()).trim())));
 		}
-		//First FLowShape should be start
+		//First FlowShape should be start
 		varList.addFirst(new FlowShape("Start"));
 		//Last FlowShape should be End
 		varList.addLast(new FlowShape("End"));
@@ -70,121 +70,86 @@ public class FlowChart {
 			
 			if(g.contains("InsertIf"))
 			{
-				prev=varList.get(varList.indexOf(new FlowShape(param[1].trim())));
-				current=varList.get(varList.indexOf(new FlowShape(param[0].trim())));
-				next=varList.get(varList.indexOf(new FlowShape(param[2].trim())));
-				next2=varList.get(varList.indexOf(new FlowShape(param[3].trim())));
-				
-				if(prev.getShape().equals("diam"))
+				try{
+					prev=varList.get(varList.indexOf(new FlowShape(param[1].trim())));
+					current=varList.get(varList.indexOf(new FlowShape(param[0].trim())));
+					next=varList.get(varList.indexOf(new FlowShape(param[2].trim())));
+					next2=varList.get(varList.indexOf(new FlowShape(param[3].trim())));
+				}catch(IndexOutOfBoundsException e1)
 				{
+					FlowInterface.writeToUser("In InsertIf("+param[0]+","+param[1]+","+param[2]+","+param[3]+") a parameter is null", true);
+				}
+				
+				if(!prev.getShape().equals("diam"))
+				{
+					prev.setNext(current);
 					
-					current.setNext(next);
-					current.setNext2(next2);
-					if(next.getPrev()!=null)
+				}
+				current.setNext(next);
+				current.setNext2(next2);
+				if(next.getPrev()==null)
+				{
+					next.setPrev(current);
+					if(next2.getPrev()==null)
 					{
-						current.setShape("diam-arrow-yes");
-						if(next2.getPrev()!=null)
-						{
-							current.setShape("diam-arrow-yes-no");
-						}
-						else
-						{
-							next2.setPrev(current);
-							current.setShape("diam");
-						}
-					}
-					else if(next2.getPrev()!=null)
-					{
-						next.setPrev(current);
-						current.setShape("diam-arrow-no");
-					}
-					else
-					{
-						next.setPrev(current);
 						next2.setPrev(current);
-						current.setShape("diam");
+						
 					}
+					
+				}
+				else if(next2.getPrev()==null)
+				{
+					next2.setPrev(current);
 				}
 				else
 				{
-					prev.setNext(current);
-					current.setNext(next);
-					
-					current.setNext2(next2);
-					if(next.getPrev()!=null)
-					{
-						current.setShape("diam-arrow-yes");
-						if(next2.getPrev()!=null)
-						{
-							current.setShape("diam-arrow-yes-no");
-						}
-						else
-						{
-							next2.setPrev(current);
-							current.setShape("diam");
-						}
-					}
-					else if(next2.getPrev()!=null)
-					{
-						next.setPrev(current);
-						current.setShape("diam-arrow-no");
-					}
-					else
-					{
-						next.setPrev(current);
-						next2.setPrev(current);
-						current.setShape("diam");
-					}
+					next.setPrev(current);
+					next2.setPrev(current);
 				}
+				current.setShape("diam");
 				
 			}
 			
 			else if(g.contains("Insert"))
 			{
-
-				prev=varList.get(varList.indexOf(new FlowShape(param[1].trim())));
-				current=varList.get(varList.indexOf(new FlowShape(param[0].trim())));
-				next=varList.get(varList.indexOf(new FlowShape(param[2].trim())));
+				try{
+					prev=varList.get(varList.indexOf(new FlowShape(param[1].trim())));
+					current=varList.get(varList.indexOf(new FlowShape(param[0].trim())));
+					next=varList.get(varList.indexOf(new FlowShape(param[2].trim())));
+				}catch(IndexOutOfBoundsException e1)
+				{
+					FlowInterface.writeToUser("In Insert("+param[0]+","+param[1]+","+param[2]+") a parameter is null", true);
+				}
 				
 				if(prev.getShape().contains("diam"))
 				{
-					current.setNext(next);
-					
-					if(next.getPrev()!=null)
-					{
-						current.setShape("rect-arrow");
-					}
-					else
-					{
-						next.setPrev(current);
-						current.setShape("rect");
-					}
-					
+					current.setNext(next);	
 				}
 				else
 				{
 					prev.setNext(current);
 					current.setNext(next);
-					if(next.getPrev()!=null)
-					{
-						current.setShape("rect-arrow");
-					}
-					else
-					{
-						next.setPrev(current);
-						current.setShape("rect");
-					}
+					
 				}
+				if(next.getPrev()==null)
+				{
+					next.setPrev(current);
+				}
+				current.setShape("rect");
+				
 				
 			}
 			else if(g.contains("GetOverHere"))
 			{
-			
-				current=varList.get(varList.indexOf(new FlowShape(param[0].trim())));
-				next=varList.get(varList.indexOf(new FlowShape(param[1].trim())));
+				try{
+					current=varList.get(varList.indexOf(new FlowShape(param[0].trim())));
+					next=varList.get(varList.indexOf(new FlowShape(param[1].trim())));
+				}catch(IndexOutOfBoundsException e1)
+				{
+					FlowInterface.writeToUser("In GetOverHere("+param[0]+","+param[1]+") a parameter is null", true);
+				}
 			
 				current.setNext(next);
-				next.setPrev(current);
 				if(next.getShape()==null)
 				{
 					next.setShape("rect");
@@ -192,18 +157,35 @@ public class FlowChart {
 			}
 			else if(g.contains("Smash"))
 			{
-				current=varList.get(varList.indexOf(new FlowShape(param[0].trim())));
-				next=current.getNext();
-				prev=current.getPrev();
-				prev.setNext(next);
-				next.setPrev(prev);
+				try{
+					current=varList.get(varList.indexOf(new FlowShape(param[0].trim())));
+					next=current.getNext();
+					prev=current.getPrev();
+				}catch(IndexOutOfBoundsException e1)
+				{
+					FlowInterface.writeToUser("In Smash("+param[0]+") a parameter is null", true);
+				}
+				
+				for(FlowShape th:varList)
+				{
+					
+					if(th.getNext()!=null&&th.getNext().equals(current))
+					{
+						th.setNext(next);
+					}
+					if(th.getPrev()!=null&&th.getPrev().equals(current))
+					{
+						th.setPrev(prev);
+					}
+					if(th.getNext2()!=null&&th.getNext2().equals(current))
+					{
+						th.setNext2(next);
+					}
+				}
 				
 				varList.remove(current);
 			}
-			else
-			{
-				continue;
-			}
+			
 		}
 		this.states=varList;
 	}
@@ -227,7 +209,7 @@ public class FlowChart {
 		{			
 			FlowShape next2=current.getNext2();
 			//If the shape of the state is a diamond then the positions of the next states is lower than usual.
-			if(current.getShape().equals("diam")||current.getShape().equals("diam-arrow-yes")||current.getShape().equals("diam-arrow-no")||current.getShape().equals("diam-arrow-yes-no"))
+			if(current.getShape().equals("diam"))
 			{
 				//Position in x doesn't change and position in y take into account size of the shape and the arrow
 				next.setPositionX(current.getPositionX());
@@ -258,13 +240,28 @@ public class FlowChart {
 			if(sh.getShape().equals("diam"))
 			{
 				FlowShape next=sh.getNext();
-				while(next!=null)
+				while(next!=null&&!next.equals(sh))
 				{
+					FlowShape prev=next.getPrev();
+					while(prev!=null)
+					{
+						if(prev.equals(next))
+						{
+							break;
+						}
+						prev=prev.getPrev();
+					}
 					if(next.getShape().equals("diam"))
 					{
 						sh.setIfNum(++ifCount);
 					}
 					next=next.getNext();
+					if(ifCount>100)
+					{
+						FlowInterface.writeToUser("Error: Too many loops", true);
+						break;
+						
+					}
 				}
 				ifCount=1;
 			}

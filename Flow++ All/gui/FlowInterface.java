@@ -25,7 +25,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import syntax.flowpp;
-import lexical.LexicalAnalyzer;
+import lexical.Flow;
 
 
 
@@ -48,6 +48,7 @@ public class FlowInterface {
 	private LinkedList<FlowChart>flowcharts;
 	private LinkedList<String>flowToShow;
 	private boolean saved=false;
+	
 	
 	public static void main(String[] args) {
 		new FlowInterface().launchGUI();
@@ -466,44 +467,19 @@ public class FlowInterface {
 		
 		public void actionPerformed(ActionEvent e) {
 			
-			LexicalAnalyzer lex=new LexicalAnalyzer();
+			
 			JButton theButton = (JButton) e.getSource();
 			//If button pressed is compile then obtain what the user wrote and check for errors
 			if(theButton==compile)
 			{
 				if(saved)
 				{
-					try {
-						FileWriter w=new FileWriter(codeFile);
-						w.write(getText());
-						w.flush();
-						w.close();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-						writeToUser("Error: IO Exception", true);
-					}
-					
-					lex.start();
-					try{
-						
-						FileReader fr=new FileReader(inputFile.getText()+"_lexAnalisys.txt");
-	                    flowpp parser = new flowpp(fr);
-	                    parser.start();
-	                    System.out.println("Syntax is correct");
-	                    writeToUser("Syntax correct", false);
-					} catch (Throwable e1){
-	                    System.out.println(e1.getMessage());
-	                    writeToUser(e1.getMessage(), true);
-					}
+					compile();
 				}
 				else
 				{
 					saveFileWarn();
-					
 				}
-				
-				
 			}
 			//If button pressed is run, compile code and execute it.
 			else if(theButton==run)
@@ -512,68 +488,12 @@ public class FlowInterface {
 				flowToShow=new LinkedList<String>();
 				if(saved)
 				{
-					try {
-						FileWriter w=new FileWriter(codeFile);
-						w.write(getText());
-						w.flush();
-						w.close();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-						writeToUser("Error: IO Exception", true);
-					}
-					
-					lex.start();
-					
-					//Gives data to FlowDrawer so flowchart can be drawn
-					try {
-						codeDecoder(inputFile.getText()+"_lexAnalisys.txt");
-						for(int i=0;i<flowcharts.size();i++)
-						{
-							if(flowcharts.get(i).getCommands().contains("Fatality()")&&!flowcharts.get(i).getCommands().contains("ShowItToMe()"))
-							{
-								flowcharts.remove(i);
-								i--;
-							}
-							else if(flowcharts.get(i).getCommands().contains("Fatality()"))
-							{
-								if(flowcharts.get(i).getCommands().indexOf("Fatality()")<flowcharts.get(i).getCommands().indexOf("ShowItToMe()"))
-								{
-									flowcharts.remove(i);
-									i--;
-								}
-								else
-								{
-									if(flowToShow.contains(flowcharts.get(i).getName()))
-									{
-										//setFlowchartPositions(flowcharts.get(i).getStates());
-										flowchart=flowcharts.get(i).createFlowchart();
-										
-										flowchart.showItToMe(1000, 0);
-									}
-								}
-							}
-							else if(flowToShow.contains(flowcharts.get(i).getName()))
-							{
-								//setFlowchartPositions(flowcharts.get(i).getStates());
-								flowchart=flowcharts.get(i).createFlowchart();
-								
-								flowchart.showItToMe(1000, 0);
-							}
-							
-						}
-						
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-						writeToUser("Error: File not found", true);
-					}
-					
+					compile();
+					run();
 				}
 				else
 				{
 					saveFileWarn();
-					
 				}
 			}
 			else if(theButton==save)
@@ -584,11 +504,22 @@ public class FlowInterface {
 					saveFileWarn1();
 				}
 				codeFile=new File(inputFile.getText()+".fpp");
+				try {
+					FileWriter w=new FileWriter(codeFile);
+					w.write(getText());
+					w.flush();
+					w.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					writeToUser("Error: IO Exception", true);
+				}
 				saved=true;
 			}
 			
 			else if(theButton==browse)
 			{
+				Flow lex=new Flow();
 				lex.start2();
 			}
 			else if(theButton==open)
@@ -596,15 +527,90 @@ public class FlowInterface {
 				try {
 					setText(openFile(getOpenFile()));
 					inputFile.setText(getOpenFile().replace(".fpp", ""));
+					saved=true;
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					writeToUser("Error: Could not open file", true);
 					openFileWarn();
-					
 				}
 			}
 			
+			
+		}
+		private void compile()
+		{
+			//Lexical Analyzer
+			Flow lex=new Flow();
+			try {
+				FileWriter w=new FileWriter(codeFile);
+				w.write(getText());
+				w.flush();
+				w.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				writeToUser("Error: IO Exception", true);
+			}
+			
+			lex.start();
+			try{
+				
+				FileReader fr=new FileReader(inputFile.getText()+"_syntax.txt");
+                flowpp parser = new flowpp(fr);
+                parser.start();
+                System.out.println("Syntax is correct");
+                writeToUser("Syntax correct", false);
+			} catch (Throwable e1){
+                System.out.println(e1.getMessage());
+                writeToUser(e1.getMessage(), true);
+			}
+		}
+		private void run()
+		{
+			try {
+				codeDecoder(inputFile.getText()+"_lexAnalisys.txt");
+				for(int i=0;i<flowcharts.size();i++)
+				{
+					if(flowcharts.get(i).getCommands().contains("Fatality()")&&!flowcharts.get(i).getCommands().contains("ShowItToMe()"))
+					{
+						flowcharts.remove(i);
+						i--;
+					}
+					else if(flowcharts.get(i).getCommands().contains("Fatality()"))
+					{
+						if(flowcharts.get(i).getCommands().indexOf("Fatality()")<flowcharts.get(i).getCommands().indexOf("ShowItToMe()"))
+						{
+							writeToUser("Error: "+flowcharts.get(i).getName()+" not found.", true);
+							flowcharts.remove(i);
+							i--;
+						}
+						else
+						{
+							if(flowToShow.contains(flowcharts.get(i).getName()))
+							{
+								//setFlowchartPositions(flowcharts.get(i).getStates());
+								flowchart=flowcharts.get(i).createFlowchart();
+								
+								flowchart.showItToMe(1000, 0);
+							}
+						}
+					}
+					else if(flowToShow.contains(flowcharts.get(i).getName()))
+					{
+						//setFlowchartPositions(flowcharts.get(i).getStates());
+						flowchart=flowcharts.get(i).createFlowchart();
+						
+						flowchart.showItToMe(1000, 0);
+					}
+					
+				}
+				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				writeToUser("Error: File not found", true);
+			}
 			
 		}
 	}

@@ -6,6 +6,8 @@
 
 package lexical;
 
+import gui.FlowInterface;
+
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -73,6 +75,7 @@ public class Lexical {
 		lexi.add(tokensIden.get(i)+"-"+tokensDef.get(i));
             }
             lexi.add("Error in line: "+ErrorLine1+" \n "+ErrorLine);
+            FlowInterface.writeToUser("Error in line: "+ErrorLine1+" \n "+ErrorLine, true);
 	} 
 		
         return lexi;
@@ -170,8 +173,8 @@ public class Lexical {
             else{
                 tokensDef.add("unknown");
                 tokensIden.add(tokens.get(i));
-                //ErrorLine =  "Token: "+tokens.get(i)+" Number: "+i;
-                //return "Error";
+                ErrorLine =  "Token: "+tokens.get(i)+" Number: "+ (i+1);
+                return "Error";
             }
         } 
         

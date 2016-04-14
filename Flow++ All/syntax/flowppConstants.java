@@ -41,7 +41,9 @@ public interface flowppConstants {
   /** RegularExpression Id. */
   int Assign = 20;
   /** RegularExpression Id. */
-  int CharValue = 21;
+  int Newline = 21;
+  /** RegularExpression Id. */
+  int CharValue = 22;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -69,6 +71,7 @@ public interface flowppConstants {
     "\"Comma\"",
     "\"Quote\"",
     "\"Assign\"",
+    "\"Newline\"",
     "\"CharValue\"",
   };
 

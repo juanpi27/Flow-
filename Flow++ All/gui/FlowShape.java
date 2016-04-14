@@ -11,6 +11,7 @@ public class FlowShape {
 	private int positionX;
 	private int positionY;
 	private int ifNum;
+	private boolean pointed;
 	/**
 	 * Has all the data about the flowchart states 
 	 * @param name
@@ -27,6 +28,7 @@ public class FlowShape {
 		this.setPositionX(0);
 		this.setPositionY(0);
 		this.setIfNum(1);
+		this.setPointed(false);
 	}
 	
 	/**
@@ -139,6 +141,20 @@ public class FlowShape {
 	 */
 	public void setIfNum(int ifNum) {
 		this.ifNum = ifNum;
+	}
+
+	/**
+	 * @return the pointed
+	 */
+	public boolean isPointed() {
+		return pointed;
+	}
+
+	/**
+	 * @param pointed the pointed to set
+	 */
+	public void setPointed(boolean pointed) {
+		this.pointed = pointed;
 	}
 	
 	
