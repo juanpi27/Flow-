@@ -18,6 +18,8 @@ public class FlowDrawer {
 	private JFrame flowFrame;
 
 	private LinkedList<FlowShape> listOfCommands;
+	
+	private boolean mes=false;
 
 	public FlowDrawer(LinkedList<FlowShape>a1)
 	{
@@ -62,7 +64,6 @@ public class FlowDrawer {
 		
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			
 			//Draw the corresponding shape for each FlowShape
 			for(FlowShape thing:listOfCommands)
 			{
@@ -83,9 +84,13 @@ public class FlowDrawer {
 						circle(g,thing.getName(),thing.getPositionX(),thing.getPositionY(), thing.getNext());
 					}
 				}
-				else
+				else if(!mes)
 				{
-					FlowInterface.writeToUser("Error: Some components were not well positioned. Nothing is pointing to "+thing.getName(), true);
+					FlowInterface.writeToUser("Error: Some components were not well positioned. "
+							+ "Make sure everything has a next and a previous. One that of the components was "
+							+ thing.getName(), true);
+					
+					mes=true;
 				}
 			}
 		}

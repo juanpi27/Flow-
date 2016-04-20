@@ -241,16 +241,7 @@ public class FlowChart {
 			{
 				FlowShape next=sh.getNext();
 				while(next!=null&&!next.equals(sh))
-				{
-					FlowShape prev=next.getPrev();
-					while(prev!=null)
-					{
-						if(prev.equals(next))
-						{
-							break;
-						}
-						prev=prev.getPrev();
-					}
+				{	
 					if(next.getShape().equals("diam"))
 					{
 						sh.setIfNum(++ifCount);

@@ -368,7 +368,7 @@ public class FlowInterface {
 		for(String g:vars)
 		{
 			
-			if(g.contains(var+"=")||g.contains(var+" ="))
+			if(g.startsWith(var+"="))
 			{
 				return g.substring(g.indexOf("=")+1, g.length());
 			}
