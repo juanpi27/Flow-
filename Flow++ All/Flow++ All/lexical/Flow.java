@@ -1,0 +1,58 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package lexical;
+import gui.FlowInterface;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Juan
+ */
+public class Flow {
+    
+	public void start(){
+	       
+    	String filename;
+ 
+        filename=FlowInterface.getInputFile();
+        File f = new File(filename+".fpp");
+        Reading rf = new Reading(f);
+        Lexical lex = new Lexical(rf.readFile());
+        Output ou = new Output(filename+"_lexAnalisys");
+        ou.fileWritter(lex.LexicalAnalyzer());
+        FlowInterface.writeToUser("Done", false);
+        try {
+        	File syn=new File(filename+"_syntax.txt");
+			FileWriter w=new FileWriter(syn);
+			for(String y:lex.tokensDef)
+			{
+				w.write(y+"     ");
+			}
+			
+			w.flush();
+			w.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			FlowInterface.writeToUser("Error: IO Exception", true);
+		}
+    }
+    
+    public void start2(){
+       //Scanner in = new Scanner(System.in);  
+        new Output("test").fileWritterfpp(new CodeGenerator().Generate());  
+        Reading rf = new Reading(new File("test.fpp")); 
+        new Output("test_lexAnalisys").fileWritter(new Lexical(rf.readFile()).LexicalAnalyzer());
+        //System.out.print("Ending... ");
+        FlowInterface.writeToUser("Done", false);
+    }
+        
+}

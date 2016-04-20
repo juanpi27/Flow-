@@ -1,0 +1,1 @@
+Genesis LeftParen Var RightParen Var Assign CharValue Fatality LeftParen Var RightParen

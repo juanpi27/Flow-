@@ -1,0 +1,71 @@
+/* flowpp.jj */
+options{
+		STATIC = false;
+}
+PARSER_BEGIN(flowpp)
+	public class flowpp {
+			public static void main( String[] args){
+				try{
+					flowpp parser = new flowpp(System.in);
+					parser.start();
+					System.out.println("Syntax is correct");
+				} catch (Throwable e){
+					System.out.println(e.getMessage());
+				}
+			}
+	}
+PARSER_END(flowpp)
+SKIP : 
+{
+	" "
+|	"\r"
+|	"\t"
+|	"\n"
+}
+TOKEN:
+{
+	<Genesis : "Genesis">
+|	<Fatality : "Fatality">
+|	<Insert : "Insert">
+|	<InsertIf : "InsertIf">
+|	<Smash : "Smash">
+|	<ShowItToMe : "ShowItToMe">
+|	<GetOverHere : "GetOverHere">
+|	<Var : "Var">
+|	<String : "String">
+|	<Number : "Number">
+|	<Backslash : "Backslash">
+|	<LeftParen : "LeftParen">
+|	<RightParen : "RightParen">
+|	<Comma : "Comma">
+|	<Quote : "Quote">
+|	<Assign : "Assign">
+|	<CharValue : "CharValue">
+
+}
+
+void start():
+{}
+{
+	<Genesis> <LeftParen> <Var> <RightParen> (statements())* <Fatality> <LeftParen> <Var> <RightParen> <EOF>
+}
+void statements():
+{}
+{
+	assign() | command()
+}
+void assign():
+{}
+{
+	<Var> <Assign> <Quote> <String> <Quote>
+}
+void command():
+{}
+{
+	<Insert> <LeftParen> <Var> <Comma> <Var> <RightParen>
+|	<InsertIf> <LeftParen> <Var> <Comma> <Var> <Comma> <Var> <Comma> <Var> <RightParen>
+|	<Smash> <LeftParen> <Var> <RightParen>
+|	<ShowItToMe> <LeftParen> <Var> <RightParen>
+|	<GetOverHere> <LeftParen> <Var> <Comma> <Var> <RightParen>
+}
+
