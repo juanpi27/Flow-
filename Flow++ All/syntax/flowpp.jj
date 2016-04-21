@@ -40,6 +40,7 @@ TOKEN:
 |	<Comma : "Comma">
 |	<Quote : "Quote">
 |	<Assign : "Assign">
+|   <Newline : "Newline">
 |	<CharValue : "CharValue">
 
 }
@@ -47,25 +48,26 @@ TOKEN:
 void start():
 {}
 {
-	<Genesis> <LeftParen> <Var> <RightParen> (statements())* <Fatality> <LeftParen> <Var> <RightParen> <EOF>
+	(<Genesis> <LeftParen> <Var> <RightParen> <Newline> (statements())*)* <EOF>
 }
 void statements():
 {}
 {
-	assign() | command()
+	assign() <Newline> | command() <Newline>
 }
 void assign():
 {}
 {
-	<Var> <Assign> <Quote> <String> <Quote>
+	<Var> <Assign> <Quote> <String> <Quote> 
 }
 void command():
 {}
 {
-	<Insert> <LeftParen> <Var> <Comma> <Var> <RightParen>
+	<Insert> <LeftParen> <Var> <Comma> <Var> <Comma> <Var> <RightParen>
 |	<InsertIf> <LeftParen> <Var> <Comma> <Var> <Comma> <Var> <Comma> <Var> <RightParen>
 |	<Smash> <LeftParen> <Var> <RightParen>
 |	<ShowItToMe> <LeftParen> <Var> <RightParen>
 |	<GetOverHere> <LeftParen> <Var> <Comma> <Var> <RightParen>
+| 	<Fatality> <LeftParen> <Var> <RightParen>
 }
 
