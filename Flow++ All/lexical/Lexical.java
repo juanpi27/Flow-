@@ -508,6 +508,7 @@ public class Lexical {
             token=st.nextToken(); 
             if(token.equals("//")){ 
                 //System.out.println(sReturn); 
+                sReturn = sReturn+" &&&&&&&&&&* ";
                 return sReturn;
             } 
             else if(st.hasMoreElements())
