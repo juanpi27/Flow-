@@ -1,7 +1,5 @@
-# Flow-
+# Flow++
 Language to create flow charts.
-
-Flow++
 
 The purpose of this project is to design and implement an application oriented programming language able to interpret commands
 to produce flowcharts.As a novice programmer it is desired to be able to easily create flowcharts.  Flow++ aims to help novice programmers
